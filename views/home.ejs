@@ -11,45 +11,13 @@
 <body>
     <div class="app-container">
         <!-- Navbar -->
-         <div class="top-bar">
-            <div class="logo-section">
-                <div class="menu-icon"><img src="Menu_Alt_05.svg" alt=""></div>
-                <div class="logo">ChalkBoard</div>
-            </div>
-
-            <div id="right-side-button">
-                <div class="icon-button"><img src="/assets/notification.svg" alt=""></div>
-            <div class="icon-button"><img src="/assets/user.svg" alt=""></div>
-            </div>
-        </div>
-
+         <%- include('./partial/nav') %>
+         
+         <!-- Sidebar -->
         <div id="whole-sec">
-            <!-- Sidebar -->
-        <div class="sidebar">
-            
-            
-            <div class="nav-items">
-                <div class="nav-item active" data-tab="home">
-                    <div class="nav-icon"><img src="/assets/home.svg" alt=""></div>
-                    <div class="nav-text">Home</div>
-                </div>
-                
-                <div class="nav-item" data-tab="classes">
-                    <div class="nav-icon"><img src="/assets/class.svg" alt=""></div>
-                    <div class="nav-text">Classes</div>
-                </div>
-                
-                <div class="nav-item" data-tab="dashboard">
-                    <div class="nav-icon"><img src="/assets/dashboard.svg" alt=""></div>
-                    <div class="nav-text">Dashboard</div>
-                </div>
-            </div>
-        </div>
-        
+           <%- include('./partial/sidebar') %>
         <!-- Main Content -->
         <div class="main-content">
-            
-            
             <div class="chat-area" id="chatArea">
                 <div class="welcome-message">
                     <div class="welcome-content">
