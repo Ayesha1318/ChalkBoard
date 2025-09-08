@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChalkBoard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="home.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Navbar -->
-         <%- include('./partial/nav') %>
-         
-         <!-- Sidebar -->
-        <div id="whole-sec">
-           <%- include('./partial/sidebar') %>
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="chat-area" id="chatArea">
-                <div class="welcome-message">
-                    <div class="welcome-content">
-                        <h2>Welcome to ChalkBoard AI Assistant</h2>
-                        <p>Ask me anything about your coursework, assignments, or learning topics!</p>
+        <%- include('./partial/nav') %>
+
+            <!-- Sidebar -->
+            <div id="whole-sec">
+                <%- include('./partial/sidebar') %>
+                    <!-- Main Content -->
+                    <div class="main-content">
+                        <div class="chat-area" id="chatArea">
+                            <div class="welcome-message">
+                                <div class="welcome-content">
+                                    <h2>Welcome to ChalkBoard AI Assistant</h2>
+                                    <p>Ask me anything about your coursework, assignments, or learning topics!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-input-container">
+                            <div class="input-background"></div>
+                            <div class="chat-input">
+                                <div class="upload-button" id="uploadButton">
+                                    <input type="file" id="fileInput" style="display:none" />
+                                    <div class="upload-icon"><img src="/assets/upload.svg" alt=""></div>
+                                </div>
+
+                                <textarea class="message-input" placeholder="Ask me anything about your coursework..."
+                                    id="messageInput"></textarea>
+
+                                <div class="send-button" id="sendButton">
+                                    <div class="send-icon"><img src="/assets/send.svg" alt=""></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="disclaimer">
+                            ChalkBoard AI can make mistakes so double check responses.
+                        </div>
                     </div>
-                </div>
             </div>
-            
-            <div class="chat-input-container">
-                <div class="input-background"></div>
-                <div class="chat-input">
-                    <div class="upload-button" id="uploadButton">
-                        <div class="upload-icon"><img src="/assets/upload.svg" alt=""></div>
-                    </div>
-                    <input type="text" class="message-input" placeholder="Ask me anything about your coursework..." id="messageInput">
-                    
-                    <div class="send-button" id="sendButton">
-                        <div class="send-icon"><img src="/assets/send.svg" alt=""></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="disclaimer">
-                ChalkBoard AI can make mistakes so double check responses.
-            </div>
-        </div>
-        </div>
     </div>
 
-    <script src="Classroom.js"></script>
+    <script src="home.js"></script>
 </body>
+
 </html>
