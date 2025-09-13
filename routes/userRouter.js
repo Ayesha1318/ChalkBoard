@@ -1,9 +1,13 @@
 const path = require('path');
 const express = require('express');
+const multer = require("multer");
 
 const userRouter = express.Router();
 const rootDir = require('../utils/pathUtil');
 const { generateResponse } = require('../aiAgent');
+const { handlePdfWithAI } = require("../aiAgent");
+
+const upload = multer({ dest: "uploads/" });
 
 userRouter.get("/",(req,res,next)=>{
    res.render('home');
@@ -30,6 +34,19 @@ userRouter.post("/ai-response", async (req, res) => {
   }
 });
 
+userRouter.post("/upload-pdf", upload.single("pdfFile"), async (req, res) => {
+  try {
+    const task = req.body.task
+    const filePath = req.file.path;
+
+    const aiResponse = await handlePdfWithAI(filePath, task);
+
+    res.json({ result: aiResponse });
+  } catch (err) {
+    console.error("Error in /upload-pdf:", err);
+    res.status(500).json({ error: "Failed to process PDF" });
+  }
+});
 
 userRouter.get("/class",(req,res,next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'home.html'));
