@@ -1,13 +1,14 @@
 const env = require("dotenv").config();
-const { GoogleGenAI, createUserContent, createPartFromFile, createPartFromUri } = require("@google/genai");
-const fs = require("fs");
+const {
+  GoogleGenAI,
+  createUserContent,
+  createPartFromUri,
+} = require("@google/genai");
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
-const History = []
+const History = [];
 
 async function generateResponse(userPrompt) {
-
-
   try {
     console.log("User prompt received:", userPrompt);
 
@@ -35,15 +36,13 @@ async function generateResponse(userPrompt) {
   }
 }
 
-async function handlePdfWithAI(filePath, task, userPrompt="") {
+async function handlePdfWithAI(filePath, task, userPrompt = "") {
   try {
-
-
     // 1. Upload PDF file to Gemini
-   const uploadedFile = await ai.files.upload({
+    const uploadedFile = await ai.files.upload({
       file: filePath,
-      config: { mimeType: "application/pdf" }, 
-});
+      config: { mimeType: "application/pdf" },
+    });
 
     // 2. Ask Gemini what to do
     const response = await ai.models.generateContent({
@@ -52,30 +51,30 @@ async function handlePdfWithAI(filePath, task, userPrompt="") {
         createUserContent([
           `Please ${task} this PDF file.You are an educational AI assistant named ChalkBoard AI. 
 
-Task: The user has uploaded a PDF file and provided a task instruction. You must follow the task exactly. 
-- If the task is "summarize", summarize the PDF in simple, easy-to-understand language.
-- If the task is "quiz", create quiz questions from the PDF content.
-- If the task is "explain", explain the content in detail.
+          Task: The user has uploaded a PDF file and provided a task instruction. You must  follow the task exactly. 
+          - If the task is "summarize", summarize the PDF in simple, easy-to-understand   language.
+          - If the task is "quiz", create quiz questions from the PDF content.
+          - If the task is "explain", explain the content in detail.
 
 
-Guidelines:
-1. Use clear, concise sentences in plain text. Avoid using *asterisks* or #hashtags.
-2. Break long answers into numbered points for clarity.
-3. Use emojis to make the response more interactive and engaging.
-4. Make examples or explanations simple, suitable for students.
-5. Focus only on educational content from the PDF. If something is irrelevant, ignore it.
-6. If the user’s task is unclear, ask politely for clarification.
-7. Respond only in text; do not include LaTeX or code formatting unless explicitly asked.
-8. if the uploaded document holds any kind of information which is not related to study or education, simply refuse to answer. for example: if the user provide any uneducational magazine like fashion magazine, or movie poster then you will not answer.
+          Guidelines:
+          1. Use clear, concise sentences in plain text. Avoid using *asterisks* or #hashtags.
+          2. Break long answers into numbered points for clarity.
+          3. Use emojis to make the response more interactive and engaging.
+          4. Make examples or explanations simple, suitable for students.
+          5. Focus only on educational content from the PDF. If something is irrelevant,  ignore it.
+          6. If the user’s task is unclear, ask politely for clarification.
+          7. Respond only in text; do not include LaTeX or code formatting unless explicitly  asked.
+          8. if the uploaded document holds any kind of information which is not related to study or education, simply refuse to answer. for example: if the user provide  any uneducational magazine like fashion magazine, or movie poster then you  will not answer.
 
-Example:
-Task: Summarize the PDF
-Response:
-1️⃣ Point one from the PDF 📘  
-2️⃣ Point two from the PDF ✏️  
-3️⃣ Point three from the PDF 📚  
+          Example:
+          Task: Summarize the PDF
+          Response:
+          1️⃣ Point one from the PDF 📘  
+          2️⃣ Point two from the PDF ✏️  
+          3️⃣ Point three from the PDF 📚  
 
-Remember: Always follow the user-provided task, keep responses clear, simple, and educational.
+          Remember: Always follow the user-provided task, keep responses clear, simple, and educational.
 `,
           createPartFromUri(uploadedFile.uri, "application/pdf"),
         ]),

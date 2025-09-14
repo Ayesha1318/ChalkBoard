@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   <div class="sidebar">
              
             <div class="nav-items">
@@ -17,3 +18,31 @@
                 </div>
             </div>
         </div>
+=======
+<div class="sidebar">
+  <div class="nav-items">
+    
+    <div class="nav-item <%= activeTab === 'home' ? 'active' : '' %>" data-tab="home">
+      <div class="nav-icon"><img src="/assets/home.svg" alt=""></div>
+      <div class="nav-text"><a href="/">Home</a></div>
+    </div>
+
+    <div class="nav-item <%= activeTab === 'classes' ? 'active' : '' %>" data-tab="classes">
+      <div class="nav-icon"><img src="/assets/class.svg" alt=""></div>
+      <div class="nav-text">
+        <% if (subjectName) { %>
+          <a href="/class/<%= subjectName %>"><%= subjectName %></a>
+        <% } else { %>
+          <a href="/classes">Classes</a>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="nav-item <%= activeTab === 'dashboard' ? 'active' : '' %>" data-tab="dashboard">
+      <div class="nav-icon"><img src="/assets/dashboard.svg" alt=""></div>
+      <div class="nav-text"><a href="/dashboard">Dashboard</a></div>
+    </div>
+
+  </div>
+</div>
+>>>>>>> 2bdd36d6bf80334bd05a8d566f3ff870b67a8de2

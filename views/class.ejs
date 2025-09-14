@@ -11,7 +11,35 @@
    <%- include('./partial/nav') %>
    <div id="whole-sec">
    <%- include('./partial/sidebar') %>
+  <!-- main section -->
+   <main class="main-area">
+     <section class="banner"> 
+      <div class="banner-left">
+         <img src="./logo.jpg" alt="logo" class="class-banner-img">
+         </div> 
+         <div class="banner-content"> 
+          <h1>Generative AI for Education</h1>
+           <p>Generate short notes and quiz for your subjects. Learn effectively.</p>
+           </div>
+           </section>
+            <section class="cards-grid">
+               <% subjects.forEach(function(subject, index){ %> 
+                <a href="/class/<%= subject.name %>" class="subject-link">
+                   <article class="subject-card">
+                   <div class="avatar">
+                    <%= index+1 %></div>
+                     <div class="subject-body">
+                       <h3><%= subject.name %></h3>
+                        <p class="meta"><%= subject.className %><br><span class="teacher"><%= subject.teacher %></span></p>
+                       </div> 
+                      </article>
+                     </a>
+                      <% }); %> 
+                    </section> 
+                  </main>
+ </div>
    </div>
-   </div>
+   
+
 </body>
 </html>
