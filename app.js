@@ -13,6 +13,7 @@ app.use(userRouter);
 app.use(express.urlencoded({extended:true}));
 
 app.use(express.static(path.join(rootDir,'public')));
+app.use('/files', express.static('public/files'));
 
 const PORT = 3000;
 app.listen(PORT,()=>{
