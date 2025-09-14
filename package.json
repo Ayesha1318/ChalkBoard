@@ -10,14 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-<<<<<<< HEAD
     "@google/genai": "^1.17.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-=======
     "bootstrap": "^5.3.8",
->>>>>>> 2bdd36d6bf80334bd05a8d566f3ff870b67a8de2
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "multer": "^2.0.2",

@@ -10,11 +10,10 @@ const { handlePdfWithAI } = require("../aiAgent");
 const upload = multer({ dest: "uploads/" });
 
 userRouter.get("/",(req,res,next)=>{
-   res.render('home',{ activeTab: "home",subjectName: null });
+   res.render('home',{ activeTab: "home",subjectName: null, autoPdf: "", autoTask: "" });
 })
 userRouter.get("/home",(req,res,next)=>{
-<<<<<<< HEAD
-    res.render('home');
+    res.render('home',{ activeTab: "home",subjectName: null, autoPdf: "", autoTask: "" });
 })
 
 userRouter.post("/ai-response", async (req, res) => {
@@ -52,15 +51,17 @@ userRouter.post("/upload-pdf", upload.single("pdfFile"), async (req, res) => {
 userRouter.get("/class",(req,res,next)=>{
     // res.sendFile(path.join(rootDir, 'views', 'home.html'));
     res.render('class');
-=======
    
     res.render('home',{ activeTab: "home" ,subjectName: null});
->>>>>>> 2bdd36d6bf80334bd05a8d566f3ff870b67a8de2
 })
 const subjects=[
-          { name: "Mathematics", className: "Class 10", teacher: "Mr. Sharma" },
-    { name: "Science", className: "Class 9", teacher: "Mrs. Verma" },
-    { name: "English", className: "Class 8", teacher: "Ms. Khan" }
+  { name: "Operating System", className: "BCS-3D", teacher: "Dr. Soumi Paul" },
+          { name: "Artificial Intelligence", className: "BCS-3D", teacher: "Dr. Ratnadeep Dey" },
+    { name: "DBMS", className: "BCS-3D", teacher: "Dr. Priyanka Saha" },
+    { name: "Mathametics-IV", className: "BCS-3D", teacher: "Dr. Sayan Sengupta" },
+    { name: "CASD", className: "BCS-3D", teacher: "Dr. Koyel Chanda" },
+    { name: "Physics", className: "BCS-3D", teacher: "Dr. Rajeswar Panja" }
+    
     ];
 userRouter.get("/class/:name", (req, res) => {
   const subjectName = req.params.name;
@@ -101,6 +102,22 @@ userRouter.get("/class/:name",(req,res,next)=>{
     subjectName: null 
   });
 });
+
+userRouter.get("/generate-summary", (req, res) => {
+  const pdfFile = req.query.pdf;
+  const task = "Generate Summary";
+
+  res.render("home", { 
+    activeTab: "home",
+    subjectName: null,
+    autoPdf: pdfFile,
+    autoTask: task
+  });
+});
+
+userRouter.post("/generate-summary",(req,res,next)=>{
+  res.render('home',{ activeTab: "home",subjectName: null });
+})
    
 
 

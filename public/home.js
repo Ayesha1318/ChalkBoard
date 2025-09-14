@@ -6,16 +6,12 @@ const fileInput = document.getElementById("fileInput");
 const uploadButton = document.getElementById("uploadButton");
 const uploadedFileContainer = document.getElementById("uploadedFileContainer");
 
-// ------------------ Message Section -------------------
-function removeWelcome() {
-  if (welcomeMessage) {
-    welcomeMessage.style.display = "none";
-  }
-}
+let uploadedFile = null;
 
-messageInput.addEventListener("input", () => {
-  messageInput.style.height = messageInput.scrollHeight + "px";
-});
+// ------------------ Utility Functions -------------------
+function removeWelcome() {
+  if (welcomeMessage) welcomeMessage.style.display = "none";
+}
 
 function addMessage(text, sender = "user", fileName = null, fileObj = null) {
   removeWelcome();
@@ -23,11 +19,9 @@ function addMessage(text, sender = "user", fileName = null, fileObj = null) {
   msgDiv.className = sender === "user" ? "user-msg" : "ai-msg";
 
   if (fileName && fileObj) {
-    // Show file in chat bubble
     const fileWrapper = document.createElement("div");
     fileWrapper.className = "file-msg";
     const icon = document.createElement("span");
-    icon.textContent = "📄";
     icon.style.marginRight = "8px";
 
     const link = document.createElement("a");
@@ -40,9 +34,7 @@ function addMessage(text, sender = "user", fileName = null, fileObj = null) {
     fileWrapper.appendChild(icon);
     fileWrapper.appendChild(link);
 
-    if (text) {
-      msgDiv.innerHTML = text + "<br>";
-    }
+    if (text) msgDiv.innerHTML = text + "<br>";
     msgDiv.appendChild(fileWrapper);
   } else {
     msgDiv.textContent = text;
@@ -52,55 +44,8 @@ function addMessage(text, sender = "user", fileName = null, fileObj = null) {
   chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-// ------------------ File Section -------------------
-let uploadedFile = null;
-
-uploadButton.addEventListener("click", () => {
-  fileInput.click();
-});
-
-fileInput.addEventListener("change", (event) => {
-  uploadedFile = event.target.files[0];
-  if (!uploadedFile) return;
-
-  // Show file badge in input area
-  uploadedFileContainer.innerHTML = `
-    <div class="file-badge">
-      📄 ${uploadedFile.name} <span id="removeFile">&times;</span>
-    </div>
-  `;
-
-   const removeBtn = document.getElementById("removeFile");
-  removeBtn.addEventListener("click", () => {
-    uploadedFile = null;
-    uploadedFileContainer.innerHTML = "";
-  });
-});
-
-// ------------------ Send Section -------------------
-async function sendMessage() {
-  const messageText = messageInput.value.trim();
-  if (!messageText && !uploadedFile) return;
-
-  // Show user message + PDF in chat
-  addMessage(messageText || "Sent a file", "user", uploadedFile?.name, uploadedFile);
-
-  // Reset input box
-  messageInput.value = "";
-  messageInput.style.height = "53px";
-
-  // Prepare form data
-  const formData = new FormData();
-  if (uploadedFile) formData.append("pdfFile", uploadedFile);
-  if (messageText) formData.append("task", messageText);
-
-  // Remove file from input and UI immediately 
-  uploadedFileContainer.innerHTML = "";
-  fileInput.value = "";
-  const fileToSend = uploadedFile; // keep reference for sending
-  uploadedFile = null;
-
-  // AI typing bubble
+// Create AI typing bubble and return the element + interval
+function createTypingBubble() {
   const typingBubble = document.createElement("div");
   typingBubble.className = "ai-msg typing-msg";
   typingBubble.textContent = "......";
@@ -114,44 +59,109 @@ async function sendMessage() {
     chatArea.scrollTop = chatArea.scrollHeight;
   }, 300);
 
+  return { typingBubble, dotsInterval };
+}
+
+// Display AI response word by word in a given element
+function displayAIResponseWordByWord(aiText, bubbleElement) {
+  bubbleElement.textContent = "";
+  const words = aiText.split(" ");
+  let index = 0;
+  const wordInterval = setInterval(() => {
+    bubbleElement.textContent += words[index] + " ";
+    chatArea.scrollTop = chatArea.scrollHeight;
+    index++;
+    if (index >= words.length) clearInterval(wordInterval);
+  }, 20);
+}
+
+// ------------------ File Section -------------------
+uploadButton.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", (event) => {
+  uploadedFile = event.target.files[0];
+  if (!uploadedFile) return;
+
+  uploadedFileContainer.innerHTML = `
+    <div class="file-badge">
+       ${uploadedFile.name} <span id="removeFile">&times;</span>
+    </div>
+  `;
+
+  document.getElementById("removeFile").addEventListener("click", () => {
+    uploadedFile = null;
+    uploadedFileContainer.innerHTML = "";
+  });
+});
+
+// ------------------ Send Section -------------------
+async function sendMessage(messageText = null, fileObj = null) {
+  const text = messageText || messageInput.value.trim();
+  if (!text && !fileObj) return;
+
+  // Show user message + file
+  addMessage(text || "Sent a file", "user", fileObj?.name, fileObj || uploadedFile);
+
+  // Reset input
+  messageInput.value = "";
+  messageInput.style.height = "53px";
+
+  // Prepare form data
+  const formData = new FormData();
+  if (fileObj || uploadedFile) formData.append("pdfFile", fileObj || uploadedFile);
+  if (text) formData.append("task", text);
+
+  // Remove uploaded file UI immediately
+  uploadedFileContainer.innerHTML = "";
+  const fileToSend = uploadedFile || fileObj;
+  uploadedFile = null;
+
+  const { typingBubble, dotsInterval } = createTypingBubble();
+
   try {
     const url = fileToSend ? "/upload-pdf" : "/ai-response";
     const res = await fetch(url, {
       method: "POST",
-      body: fileToSend ? formData : JSON.stringify({ messageInput: messageText }),
+      body: fileToSend ? formData : JSON.stringify({ messageInput: text }),
       headers: fileToSend ? {} : { "Content-Type": "application/json" },
     });
 
     const data = await res.json();
     clearInterval(dotsInterval);
 
-    // Determine AI response text
     const aiText = data.code || data.result || "Error generating response";
-
-    // Display word by word
-    typingBubble.textContent = "";
-    const words = aiText.split(" ");
-    let index = 0;
-    const wordInterval = setInterval(() => {
-      typingBubble.textContent += words[index] + " ";
-      chatArea.scrollTop = chatArea.scrollHeight;
-      index++;
-      if (index >= words.length) clearInterval(wordInterval);
-    }, 20);
+    displayAIResponseWordByWord(aiText, typingBubble);
 
   } catch (err) {
     clearInterval(dotsInterval);
-    typingBubble.textContent = "Error connecting to server";
     console.error(err);
+    typingBubble.textContent = "Error connecting to server";
   }
 }
 
-
-// Send message on button click or Enter
-sendButton.addEventListener("click", sendMessage);
+// Send message on click or Enter
+sendButton.addEventListener("click", () => sendMessage());
 messageInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     sendMessage();
+  }
+});
+
+// ------------------ Auto-send PDF and task -------------------
+window.addEventListener("DOMContentLoaded", async () => {
+  const autoPdfPath = document.getElementById("autoPdf")?.value;
+  const autoTask = document.getElementById("autoTask")?.value;
+
+  if (autoPdfPath && autoTask) {
+    try {
+      const response = await fetch(autoPdfPath);
+      const pdfBlob = await response.blob();
+      const file = new File([pdfBlob], autoPdfPath.split("/").pop(), { type: "application/pdf" });
+
+      sendMessage(autoTask, file);
+    } catch (err) {
+      console.error(err);
+    }
   }
 });

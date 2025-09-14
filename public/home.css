@@ -23,11 +23,14 @@ body {
 /* Sidebar Styles */
 .sidebar {
   width: 320px;
-  background-color: #f1f1f1;
+  background-color: #fffdfd;
   height: 100%;
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ddd;
+  position: fixed;
+  top: 0;
+  
 }
 #whole-sec {
   display: flex;
@@ -58,16 +61,18 @@ body {
 .nav-items {
   display: flex;
   flex-direction: column;
-  margin-top: 32px;
+  /* margin-top: 32px; */
   padding: 0 16px;
+  
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 64px;
+  height: 59px;
   border-radius: 48px;
+  border: 2px solid black;
   margin-bottom: 16px;
   padding: 0 24px;
   cursor: pointer;
@@ -108,28 +113,31 @@ body {
 /* Main Content Styles */
 .main-content {
   flex: 1;
-  /* background-color: #e8e8e8; */
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #f1f1f1;
+  margin-left: 315px;
 }
 
 .top-bar {
-  height: 64px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  /* gap: 16px; */
-  padding: 0 24px;
-  width: 100%;
-  background-color: #f1f1f1;
+    height: 64px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: 319px;
+    padding: 0 24px;
+    width: 80%;
+    background-color: #f1f1f1;
+    /* border: 2px solid red; */
 }
 
 #right-side-button {
   display: flex;
   gap: 20px;
   padding: 24px;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .icon-button {
@@ -154,7 +162,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   padding: 10px;
-  background: #fafafa;
+  background-color: #f1f1f1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -188,12 +196,14 @@ body {
 .chat-input-container {
   margin: 0 10px 0px;
   position: relative;
+  height: 110px;
+  margin-left: 250px;
+  width: 730px;
 }
 
 .input-background {
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background-color: #333;
@@ -224,12 +234,16 @@ body {
   overflow-y: auto;
   white-space: pre-wrap;
   word-wrap: break-word;
+  /* margin-top: 10px; */
+   padding-top: 6px;
+  
 }
 
 .message-input::placeholder {
   color: #aaa;
   font-family: "Poppins", sans-serif;
   font-size: 15px;
+ 
 }
 
 .user-msg,
@@ -240,7 +254,6 @@ body {
   white-space: pre-wrap;
   display: inline-block;
   box-sizing: border-box;
-  font-style: italic;
 }
 
 .user-msg {
@@ -279,16 +292,15 @@ body {
   transition: all 0.2s ease;
 }
 .send-button {
-  margin: 8px;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
+
   margin-right: 20px;
+  margin-top: 49px;
 }
 
 .upload-button {
-  height: 24px;
-  /* background-color: rgba(255, 255, 255, 0.1); */
-  border-radius: 8px;
-  margin-bottom: 20px;
+  margin-top: 47px;
+  
   margin-left: 13px;
 }
 
